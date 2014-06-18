@@ -23,18 +23,6 @@
 #include <stdint.h>
 #include "MessageHandler.h"
 
-// The minimum time in milliseconds between short hold messages
-const uint16_t kHoldShortMessageThrottleDuration  = 200;
-// Time in milliseconds a button must be held before eButtonActionHoldShort is generated
-const uint16_t kHoldShortThresholdDuration  = 1000;
-// The minimum time in milliseconds between medium hold messages
-const uint16_t kHoldMediumMessageThrottleDuration  = 500;
-// Time in milliseconds a button must be held before eButtonActionHoldMedium is generated
-const uint16_t kHoldMediumThresholdDuration  = 3000;
-// The minimum time in milliseconds between long hold messages
-const uint16_t kHoldLongMessageThrottleDuration  = 1000;
-// Time in milliseconds a button must be held before eButtonActionHoldLong is generated
-const uint16_t kHoldLongThresholdDuration  = 6000;
 // interface for checking button state.
 class ReadButtonState;
 // Class Button
@@ -54,26 +42,15 @@ class Button
     const MsgCode m_code;
     // Inverted logic. LOW = pressed
     uint8_t m_logicState;
-    // the millis() value at the time the button
-    // was most recently pressed.
-    unsigned long m_pressedTime;
     // Contains information about which button
     // was pressed, released or held.
     Msg m_msg;
-	// throttle last hold message
-	unsigned long m_timeLastHold;
 public:
     // construct with a digital input pin, a uniquely
     // identifying button code, and logic active state.
     Button(ReadButtonState *buttonStateReader, int pin, MsgCode code, bool activeState);
     // Returns true if the button is pressed.
     bool isPressed() const;
-    // Returns the milliseconds since a button
-    // was most recently pressed.
-    unsigned long getPressedTime() const;
-    // Restarts the timer. Used to control
-    // frequency of hold message generation
-    void resetPressTime();
     // Returns information about the current
     // state of the button.
     Msg & getMsg();

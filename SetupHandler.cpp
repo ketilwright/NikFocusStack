@@ -32,12 +32,16 @@ extern uint8_t  EEMEM ePromRestoreFocus;
 
 extern IMessageHandler *g_pMain;
 
-// the caret position when up/down keys adjust
-// m_driveAmount & m_numFrames
-#define AmntMenuPos   0
-#define FramesMenuPos 5
-#define DelayMenuPos  10
-#define RestoreFocusPos 13
+// column start/end for setup field
+#define AmountFieldStart 0
+#define AmountFieldEnd   3
+#define FrameFieldStart  5
+#define FrameFieldEnd    7
+#define DelayFieldStart  9
+#define DelayFieldEnd	 11
+#define RestoreFocusFieldStart 13
+#define RestoreFocusFieldEnd 13
+
 
 
 SetupHandler::SetupHandler(MessagePump *_pump, uint32_t driveAmount, uint32_t frames)
@@ -45,7 +49,7 @@ SetupHandler::SetupHandler(MessagePump *_pump, uint32_t driveAmount, uint32_t fr
     IMessageHandler(_pump),
     m_driveAmount(driveAmount),
     m_numFrames(frames),
-	m_frameDelayMilliseconds(0),
+	m_frameDelaySeconds(0),
 	m_restoreFocus(false)
 {
     menu[0] = "Amt";
@@ -56,150 +60,129 @@ SetupHandler::SetupHandler(MessagePump *_pump, uint32_t driveAmount, uint32_t fr
 SetupHandler::~SetupHandler()
 {}
 
+void SetupHandler::advanceCaret(uint8_t dir) // -1 = left, 1 right. All other values ignored
+{
+	unsigned char caretColumn = getCaretCol();
+	Serial.print("advanceCaret dir: "); Serial.print(dir); Serial.print(" from Column: "); Serial.print(caretColumn);
+	if(dir == 0xff)
+	{
+		switch(caretColumn)
+		{
+			case AmountFieldStart:			{ caretColumn = RestoreFocusFieldEnd; break;}
+			case FrameFieldStart:			{ caretColumn = AmountFieldEnd; break;}
+			case DelayFieldStart:			{ caretColumn = FrameFieldEnd; break;}
+			case RestoreFocusFieldStart:	{ caretColumn = DelayFieldEnd; break;}
+			default:						{ --caretColumn; break;}				
+		}
+	}
+	else if(dir == 1)
+	{
+		switch(caretColumn)
+		{
+			case AmountFieldEnd:			{ caretColumn = FrameFieldStart; break;}
+			case FrameFieldEnd:				{ caretColumn = DelayFieldStart; break;}
+			case DelayFieldEnd:				{ caretColumn = RestoreFocusFieldStart; break;}
+			case RestoreFocusFieldEnd:		{ caretColumn = AmountFieldStart; break;}
+			default:						{ ++caretColumn; break;}
+		}
+	}
+	moveCaret(caretColumn, 1);
+	Serial.print(" to Column: "); Serial.print(caretColumn); Serial.println();
+}
 
 MsgResp SetupHandler::processMessage(Msg& msg)
 {
     MsgResp rsp = eFail;
+	if(eButtonActionPress != msg.m_type) return rsp;
 	// the amount up or down some parameter will be changed
+	unsigned char caretColumn = getCaretCol();
 	int change = 0;
     // which button?
     switch(msg.m_code)
     {
         case eDown:
         {
-            switch(getCaretCol())
-            {
-                case AmntMenuPos: 
-                {
-                    switch(msg.m_type)
-                    {
-                        case eButtonActionPress: change			= -1;	 break;
-						case eButtonActionHoldShort: change		= -10;	 break;
-						case eButtonActionHoldMedium: change	= -100;	 break;
-						case eButtonActionHoldLong: change		= -1000; break;
-                        default: break;
-                    }
-                    if(change != 0) updateDriveAmountUI(change);
-                    break;
-                }
-                case FramesMenuPos: 
-                {
-                    switch(msg.m_type)
-                    {
-                        case eButtonActionPress: change = -1; break;
-						case eButtonActionHoldShort: 
-						case eButtonActionHoldMedium:
-						case eButtonActionHoldLong: change = -10; break;
-                        default: break;
-                    }
-                    if(change != 0) updateFramesUI(change);
-                    break;
-                }
-				case DelayMenuPos:
+			if((caretColumn <= AmountFieldEnd) && (msg.m_type == eButtonActionPress))
+			{
+				// change amount entry
+				change = -1000; // todo: consider a power of ten == AmountFieldEnd - AmountFieldStart + 1
+				while(caretColumn-- != AmountFieldStart)
 				{
-					switch(msg.m_type)
-					{
-						case eButtonActionPress: change = -1000; break;
-						default: break;
-					}
-					if(change != 0) updateFrameDelayUI(change);
-					break;
+					change /= 10;
 				}
-				case RestoreFocusPos:
+				updateDriveAmountUI(change);
+			}
+			else if((caretColumn >= FrameFieldStart) && (caretColumn <= FrameFieldEnd))
+			{
+				change = -100;// todo: consider a power of ten == FrameFieldEnd - FrameFieldStart + 1
+				while(caretColumn-- != FrameFieldStart)
 				{
-					switch(msg.m_type)
-					{
-						case eButtonActionPress: change = -1; break;
-						default: break;
-					}
-					if(change != 0) updateRestoreFocusUI(change);
-					break;
+					change /= 10;
 				}
-            }
+				updateFramesUI(change);
+			}
+			else if((caretColumn >= DelayFieldStart) && (caretColumn <= DelayFieldEnd))
+			{
+				// todo: consider a power of ten == DelayFieldEnd - DelayFieldStart + 1
+				change = -100;
+				while(caretColumn-- != DelayFieldStart)
+				{
+					change /= 10;
+				}
+				updateFrameDelayUI(change);
+			}
+			else if((caretColumn >= RestoreFocusFieldStart) && (caretColumn <= RestoreFocusFieldEnd))
+			{
+				updateRestoreFocusUI(-1);
+			}
             break;
         }
         case eUp:
         {
-            switch(getCaretCol())
-            {
-                case AmntMenuPos: // drive amount
-                {
-                    switch(msg.m_type)
-                    {
-						case eButtonActionPress: change			= 1;	 break;
-						case eButtonActionHoldShort: change		= 10;	 break;
-						case eButtonActionHoldMedium: change	= 100;	 break;
-						case eButtonActionHoldLong: change		= 1000; break;
-                        default: break;
-                    }
-                    if(change != 0) updateDriveAmountUI(change);
-                    break;
-                }
-                case FramesMenuPos: // frame count
-                {
-                    switch(msg.m_type)
-                    {
-                        case eButtonActionPress: change = 1; break;
-						case eButtonActionHoldShort:
-						case eButtonActionHoldMedium:
-						case eButtonActionHoldLong: change = 10; break;
-	                    default: break;
-                    }
-                    if(change != 0) updateFramesUI(change);
-                    break;
-                }
-				case DelayMenuPos:
-				{
-					switch(msg.m_type)
-					{
-						case eButtonActionPress: change = 1000; break;
-						default: break;
-					}
-					if(change != 0) updateFrameDelayUI(change);
-					break;
-				}
-				case RestoreFocusPos:
-				{
-					switch(msg.m_type)
-					{
-						case eButtonActionPress: change = 1; break;
-						default: break;
-					}
-					if(change != 0) updateRestoreFocusUI(change);
-					break;
-				}
-            }
-            break;
-        }
-        case eLeft:
-        {
-            if(eButtonActionPress == msg.m_type) 
+			if((caretColumn <= AmountFieldEnd) && (msg.m_type == eButtonActionPress))
 			{
-				switch(getCaretCol())
+				// change amount entry
+				change = 1000; // todo: consider a power of ten == AmountFieldEnd - AmountFieldStart + 1
+				while(caretColumn-- != AmountFieldStart)
 				{
-					case AmntMenuPos:		{ moveCaret(RestoreFocusPos, 1); break; }
-					case FramesMenuPos:		{ moveCaret(AmntMenuPos, 1); break; }
-					case DelayMenuPos:		{ moveCaret(FramesMenuPos, 1); break; }
-					case RestoreFocusPos:	{ moveCaret(DelayMenuPos, 1); break; }
-					default: break; // should never hit here						
+					change /= 10;
 				}
-				break;
+				updateDriveAmountUI(change);
+			}
+			else if((caretColumn >= FrameFieldStart) && (caretColumn <= FrameFieldEnd))
+			{
+				change = 100;// todo: consider a power of ten == FrameFieldEnd - FrameFieldStart + 1
+				while(caretColumn-- != FrameFieldStart)
+				{
+					change /= 10;
+				}
+				updateFramesUI(change);
+			}
+			else if((caretColumn >= DelayFieldStart) && (caretColumn <= DelayFieldEnd))
+			{
+				// todo: consider a power of ten == DelayFieldEnd - DelayFieldStart + 1
+				change = 100;
+				while(caretColumn-- != DelayFieldStart)
+				{
+					change /= 10;
+				}
+				updateFrameDelayUI(change);
+			}
+			else if((caretColumn >= RestoreFocusFieldStart) && (caretColumn <= RestoreFocusFieldEnd))
+			{
+				updateRestoreFocusUI(1);
 			}
 			break;
+		}
+        case eLeft:
+        {
+			advanceCaret(-1);
+			break; 
+		
         }
         case eRight:
         {
-            if(eButtonActionPress == msg.m_type)
-			{
-				switch(getCaretCol())
-				{
-					case AmntMenuPos:		{ moveCaret(FramesMenuPos, 1); break; }
-					case FramesMenuPos:		{ moveCaret(DelayMenuPos, 1); break; }
-					case DelayMenuPos:		{ moveCaret(RestoreFocusPos, 1); break; }
-					case RestoreFocusPos:	{ moveCaret(AmntMenuPos, 1); break; }
-					default: break; // should never hit here
-				}
-			}
+            advanceCaret(1);
 			break;
         }
         case eSelect:
@@ -213,9 +196,9 @@ MsgResp SetupHandler::processMessage(Msg& msg)
 		            eeprom_write_word(&ePromFocusAmount, m_driveAmount);
 	            }
 				uint16_t savedFrameDelay = eeprom_read_word(&ePromFrameDelay);
-				if(savedFrameDelay != m_frameDelayMilliseconds)
+				if(savedFrameDelay != m_frameDelaySeconds)
 				{
-					eeprom_write_word(&ePromFrameDelay, m_frameDelayMilliseconds);
+					eeprom_write_word(&ePromFrameDelay, m_frameDelaySeconds);
 				}
 	            uint8_t savedNumFrames = eeprom_read_byte(&ePromNumFrames);
 	            if(savedNumFrames != m_numFrames)
@@ -240,14 +223,10 @@ MsgResp SetupHandler::processMessage(Msg& msg)
 void SetupHandler::show()
 {
 	g_print->clear();
-	g_print->setCursor(AmntMenuPos, 0);
-	g_print->print(menu[0]);
-	g_print->setCursor(FramesMenuPos, 0);
-	g_print->print(menu[1]);
-	g_print->setCursor(DelayMenuPos, 0);
-	g_print->print(menu[2]);
-	g_print->setCursor(RestoreFocusPos, 0);
-	g_print->print(menu[3]);
+	printMenuItem(AmountFieldStart, 0);
+	printMenuItem(FrameFieldStart, 1);
+	printMenuItem(DelayFieldStart, 2);
+	printMenuItem(RestoreFocusFieldStart, 3);
 	m_caretCol = 0;
     updateDriveAmountUI(0); // 0: don't change, just show the current value
     updateFramesUI(0);      // 0: don't change, just show the current value
@@ -258,65 +237,71 @@ void SetupHandler::show()
 }
 void SetupHandler::updateDriveAmountUI(int change)
 {
-	// dampen change as we approach the limits
-	if(((m_driveAmount + change) > 9999) || ((m_driveAmount + change) < 0))
-	{
-		change /= 10;
-		if(0 == change) change = 1;
-	}
-	
 	m_driveAmount += change;
-	// round off to 10/100/1000 depending on change magnitude
-	if((change > 1) || (change < -1))
-	{
-		m_driveAmount -= m_driveAmount % change;
-	}
-    if(m_driveAmount < 1 ) m_driveAmount = 1;
+	if(m_driveAmount < 1 ) m_driveAmount = 1;
     if(m_driveAmount > 9999) m_driveAmount = 9999;
-    g_print->setCursor(AmntMenuPos + 1, 1);
-    g_print->print(F("     "));
-    g_print->setCursor(AmntMenuPos + 1, 1);
+	// set cursor based on how many digits are shown
+	unsigned char digits = 0; 
+	uint32_t val = m_driveAmount;
+	while(val > 0) 
+	{
+		val /= 10;
+		++digits;
+	}
+    g_print->setCursor(AmountFieldStart, 1);
+	for(unsigned char z = 0; z < 4 - digits; z++) g_print->print(F("0"));
+    //g_print->print(F("0000"));
+    
     g_print->print(m_driveAmount);
+	g_print->setCursor(getCaretCol(), 1);
 }
 void SetupHandler::updateFramesUI(int change)
 {
     m_numFrames += change;
     if(m_numFrames < 1 ) m_numFrames = 1;
-    if(m_numFrames > 100) m_numFrames = 100;
-    g_print->setCursor( FramesMenuPos + 1, 1);
-    g_print->print(F("   "));
-    g_print->setCursor( FramesMenuPos + 1, 1);
+    if(m_numFrames > 999) m_numFrames = 999;
+	// set cursor based on how many digits are shown
+	unsigned char digits = 0;
+	uint32_t val = m_numFrames;
+	
+	while(val > 0)
+	{
+		val /= 10;
+		++digits;
+	}
+	g_print->setCursor(FrameFieldStart, 1);
+    for(unsigned char z = 0; z < 3 - digits; z++) g_print->print(F("0"));
+  //  g_print->setCursor(FrameFieldStart + 3 - digits, 1);
     g_print->print(m_numFrames);
+	g_print->setCursor(getCaretCol(), 1);
 }
 
 void SetupHandler::updateFrameDelayUI(int change)
 {
-	// dampen change as we approach the limits
-	if(((m_frameDelayMilliseconds + change) > 9999) || ((m_frameDelayMilliseconds + change) < 0))
-	{
-		change /= 10;
-		if(0 == change) change = 1;
-	}
 	
-	m_frameDelayMilliseconds += change;
-	// round off to 10/100/1000 depending on change magnitude
-	if((change > 1) || (change < -1))
+	m_frameDelaySeconds += change;
+	if(m_frameDelaySeconds < 0 ) m_frameDelaySeconds = 0;
+    if(m_frameDelaySeconds > 999) m_frameDelaySeconds = 999;
+	unsigned char digits = 0;
+	uint32_t val = m_frameDelaySeconds;
+	
+	while(val > 0)
 	{
-		m_frameDelayMilliseconds -= m_frameDelayMilliseconds % change;
+		val /= 10;
+		++digits;
 	}
-    if(m_frameDelayMilliseconds < 0 ) m_frameDelayMilliseconds = 0;
-    if(m_frameDelayMilliseconds > 9999) m_frameDelayMilliseconds = 9999;
-    g_print->setCursor(DelayMenuPos + 1, 1);
-    g_print->print(F("   "));
-    g_print->setCursor(DelayMenuPos + 1, 1);
-    g_print->print(m_frameDelayMilliseconds/1000);
+    g_print->setCursor(DelayFieldStart, 1);
+	for(unsigned char z = 0; z < 3 - digits; z++) g_print->print(F("0"));
+    if(0 != m_frameDelaySeconds) g_print->print(m_frameDelaySeconds);
+	g_print->setCursor(getCaretCol(), 1);
 }
 
 void SetupHandler::updateRestoreFocusUI(int change)
 {
-	g_print->setCursor(RestoreFocusPos + 1, 1);
+	g_print->setCursor(RestoreFocusFieldStart, 1);
 	g_print->print(F("   "));		
-	g_print->setCursor(RestoreFocusPos + 1, 1);
+	g_print->setCursor(RestoreFocusFieldStart, 1);
 	if(0 != change) m_restoreFocus = !m_restoreFocus;
-	g_print->print( m_restoreFocus ? F("Y") : F("N"));
+	g_print->print( m_restoreFocus ? F("Yes") : F("No"));
+	g_print->setCursor(getCaretCol(), 1);
 }

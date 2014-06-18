@@ -26,20 +26,21 @@ class SetupHandler : public IMessageHandler
 {
     int32_t m_driveAmount;
     int32_t m_numFrames;
-	int32_t m_frameDelayMilliseconds;
+	int32_t m_frameDelaySeconds;
 	bool    m_restoreFocus;
     void updateDriveAmountUI(int change = 0);
     void updateFramesUI(int change = 0);
 	void updateFrameDelayUI(int change = 0);
 	void updateRestoreFocusUI(int change = 0);
+	void advanceCaret(uint8_t dir); // -1 = left, 1 right. All other values ignored
  public:
     SetupHandler(MessagePump *_pump, uint32_t driveAmount, uint32_t frames);
     uint32_t getDriveAmount() const { return m_driveAmount;}
     void setDriveAmount(uint32_t driveAmount) { m_driveAmount = driveAmount;}
     uint32_t getNumFrames() const { return m_numFrames; }
     void setNumFrames(uint32_t numFrames) { m_numFrames = numFrames;}
-	uint32_t getFrameDelayMilliseconds() const { return m_frameDelayMilliseconds; }
-	void setFrameDelayMilliseconds(uint32_t delay) { m_frameDelayMilliseconds = delay; }
+	uint32_t getFrameDelayMilliseconds() const { return m_frameDelaySeconds * 1000; }
+	void setFrameDelaySeconds(uint32_t delay) { m_frameDelaySeconds = delay; }
 	
 	bool getRestoreFocus() const { return m_restoreFocus; }
 	void setRestoreFocus(bool restore) { m_restoreFocus = restore; }

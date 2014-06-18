@@ -1,0 +1,1 @@
+atprogram --tool jtagice3 --interface ISP --device ATmega328P --verbose program -f C:\projects\embedded\arduino\NikFocusStackAdaFruitLcdShield\NikFocusStackAdaFruitLcdShield\Release\NikFocusStackAdaFruitLcdShield.elf

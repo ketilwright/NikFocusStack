@@ -44,7 +44,7 @@ RunFocusStackHandler::~RunFocusStackHandler()
 MsgResp RunFocusStackHandler::processMessage(Msg& msg)
 {
     MsgResp rsp = eFail;
-    if(eButtonActionHoldShort == msg.m_type)
+    if(eButtonActionPress == msg.m_type)
     {
         nk3.cancelFocusStack();
         msg.m_nextHandler = g_pMain;

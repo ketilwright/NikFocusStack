@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "NikFocusStackAdaFruitLcdShield", "NikFocusStackAdaFruitLcdShield.cppproj", "{D1C14070-BE9C-4649-B5BC-A58583B87548}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2D7BC368-C25E-4C5F-8EC8-31E836E9F806} = {2D7BC368-C25E-4C5F-8EC8-31E836E9F806}
+		{EC1EB56B-A15D-4990-81C5-E2CED0C06DF3} = {EC1EB56B-A15D-4990-81C5-E2CED0C06DF3}
+	EndProjectSection
+EndProject
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "usb2Host", "..\libs\USB_Host_Shield_2.0\usb2Host.cppproj", "{EC1EB56B-A15D-4990-81C5-E2CED0C06DF3}"
+EndProject
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "ptp2", "..\libs\PTP_2.0\ptp2.cppproj", "{2D7BC368-C25E-4C5F-8EC8-31E836E9F806}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EC1EB56B-A15D-4990-81C5-E2CED0C06DF3} = {EC1EB56B-A15D-4990-81C5-E2CED0C06DF3}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D1C14070-BE9C-4649-B5BC-A58583B87548}.Debug|AVR.ActiveCfg = Debug|AVR
+		{D1C14070-BE9C-4649-B5BC-A58583B87548}.Debug|AVR.Build.0 = Debug|AVR
+		{D1C14070-BE9C-4649-B5BC-A58583B87548}.Release|AVR.ActiveCfg = Release|AVR
+		{D1C14070-BE9C-4649-B5BC-A58583B87548}.Release|AVR.Build.0 = Release|AVR
+		{EC1EB56B-A15D-4990-81C5-E2CED0C06DF3}.Debug|AVR.ActiveCfg = Debug|AVR
+		{EC1EB56B-A15D-4990-81C5-E2CED0C06DF3}.Debug|AVR.Build.0 = Debug|AVR
+		{EC1EB56B-A15D-4990-81C5-E2CED0C06DF3}.Release|AVR.ActiveCfg = Release|AVR
+		{EC1EB56B-A15D-4990-81C5-E2CED0C06DF3}.Release|AVR.Build.0 = Release|AVR
+		{2D7BC368-C25E-4C5F-8EC8-31E836E9F806}.Debug|AVR.ActiveCfg = Debug|AVR
+		{2D7BC368-C25E-4C5F-8EC8-31E836E9F806}.Debug|AVR.Build.0 = Debug|AVR
+		{2D7BC368-C25E-4C5F-8EC8-31E836E9F806}.Release|AVR.ActiveCfg = Release|AVR
+		{2D7BC368-C25E-4C5F-8EC8-31E836E9F806}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

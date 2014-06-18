@@ -33,6 +33,11 @@ IMessageHandler::IMessageHandler(MessagePump* _pump)
 	memset(menu, 0, sizeof(menu)); // 33076
 }
 
+void IMessageHandler::printMenuItem(uint8_t col, uint8_t item)
+{
+	g_print->setCursor(col, 0);
+	g_print->print(menu[item]);
+}
 // Draws the menu text, indenting all lines but
 // the 1st by one column
 void IMessageHandler::show()
@@ -69,44 +74,15 @@ void IMessageHandler::showCaret(bool show)
     g_print->setCursor(m_caretCol, m_caretRow);
     if(show)
     {
-        g_print->print(F(">"));
+       // g_print->print(F(">"));
+	   g_print->cursor();
     }
     else
     {
-        g_print->print(F(" "));
+		g_print->noCursor();
+        //g_print->print(F(" "));
     }
 }
-
-// Turns off the caret, moves it and redraws it
-// up or down one location. Currently only supports
-// the caret in the 1st column.
-//void IMessageHandler::moveCaret(eCaretMoveDir dir)
-//{
-    //switch(dir)
-    //{
-        //case eMoveLeft:
-        //{
-			//if(m_caretCol != 0)
-			//{
-				//showCaret(false);
-				//m_caretCol = 0;
-				//showCaret(true);
-			//}
-            //break;
-        //}
-        //case eMoveRight:
-        //{
-            //showCaret(false);
-            //m_caretCol = 1;
-            //showCaret(true);
-            //break;
-        //}
-        //default:
-        //{
-            //return; // not implemented
-        //}
-    //}
-//}
 
 // Redraws the caret at the specified location
 void IMessageHandler::moveCaret(uint8_t col, uint8_t row)

@@ -65,9 +65,9 @@ NikType003StateHandler nk3State;
 NikType003  nk3(&Usb, &nk3State);
 
 // EEPROM variables
-uint16_t EEMEM ePromFocusAmount = 999;
+uint16_t EEMEM ePromFocusAmount = 100;
 uint16_t EEMEM ePromFrameDelay  = 5000;
-uint8_t  EEMEM ePromNumFrames = 4;
+uint8_t  EEMEM ePromNumFrames = 10;
 uint8_t  EEMEM ePromRestoreFocus = 0;
 
 uint16_t g_savedFocusAmount = 100;
@@ -107,14 +107,24 @@ void setup() {
 		g_usbOK = false;
 	}
 	// Restore previous settings
-	g_savedFocusAmount = eeprom_read_word(&ePromFocusAmount);
-	g_savedFrameDelay = eeprom_read_word(&ePromFrameDelay);
-	g_savedNumFrames = eeprom_read_byte(&ePromNumFrames);
-	g_savedRestoreFocus = eeprom_read_byte(&ePromRestoreFocus);
-	g_setup.setDriveAmount(g_savedFocusAmount);
-	g_setup.setFrameDelayMilliseconds(g_savedFrameDelay);
-	g_setup.setNumFrames(g_savedNumFrames);
-	g_setup.setRestoreFocus(g_savedRestoreFocus);
+	if((g_savedFocusAmount = eeprom_read_word(&ePromFocusAmount)) != 0xffff)
+	{
+		g_setup.setDriveAmount(g_savedFocusAmount);	
+	}
+	
+	if((g_savedFrameDelay = eeprom_read_word(&ePromFrameDelay)) != 0xffff)
+	{
+		g_setup.setFrameDelaySeconds(g_savedFrameDelay);	
+	}
+	
+	if((g_savedNumFrames = eeprom_read_byte(&ePromNumFrames)) != 0xff)
+	{
+		g_setup.setNumFrames(g_savedNumFrames);
+	}
+	if((g_savedRestoreFocus = eeprom_read_byte(&ePromRestoreFocus)) != 0xff)
+	{
+		g_setup.setRestoreFocus(g_savedRestoreFocus);	
+	}
 }
 
 void loop()
@@ -134,7 +144,7 @@ void loop()
 		if(!nk3.isCaptureInProgress())
 		{
 			// Capture is complete. If there is no frame delay, prepare
-			// the next frame & shoot i
+			// the next frame & shoot it
 			if(0 == g_pSetup->getFrameDelayMilliseconds())
 			{
 				if(!nk3.isNextFrameFocused())
