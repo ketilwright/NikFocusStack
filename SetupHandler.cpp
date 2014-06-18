@@ -63,7 +63,6 @@ SetupHandler::~SetupHandler()
 void SetupHandler::advanceCaret(uint8_t dir) // -1 = left, 1 right. All other values ignored
 {
 	unsigned char caretColumn = getCaretCol();
-	Serial.print("advanceCaret dir: "); Serial.print(dir); Serial.print(" from Column: "); Serial.print(caretColumn);
 	if(dir == 0xff)
 	{
 		switch(caretColumn)
@@ -87,7 +86,6 @@ void SetupHandler::advanceCaret(uint8_t dir) // -1 = left, 1 right. All other va
 		}
 	}
 	moveCaret(caretColumn, 1);
-	Serial.print(" to Column: "); Serial.print(caretColumn); Serial.println();
 }
 
 MsgResp SetupHandler::processMessage(Msg& msg)
@@ -227,12 +225,11 @@ void SetupHandler::show()
 	printMenuItem(FrameFieldStart, 1);
 	printMenuItem(DelayFieldStart, 2);
 	printMenuItem(RestoreFocusFieldStart, 3);
-	m_caretCol = 0;
     updateDriveAmountUI(0); // 0: don't change, just show the current value
     updateFramesUI(0);      // 0: don't change, just show the current value
 	updateFrameDelayUI(0);  // 0: don't change, just show the current value
 	updateRestoreFocusUI(0);
-    setCaretCol(0);
+	moveCaret(0, 1);
     showCaret(true);
 }
 void SetupHandler::updateDriveAmountUI(int change)
@@ -250,8 +247,6 @@ void SetupHandler::updateDriveAmountUI(int change)
 	}
     g_print->setCursor(AmountFieldStart, 1);
 	for(unsigned char z = 0; z < 4 - digits; z++) g_print->print(F("0"));
-    //g_print->print(F("0000"));
-    
     g_print->print(m_driveAmount);
 	g_print->setCursor(getCaretCol(), 1);
 }

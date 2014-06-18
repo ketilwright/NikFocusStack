@@ -158,7 +158,7 @@ public:
     bool isFocusStackActive() const;
 	bool isNextFrameFocused() const;
     uint16_t getProductID() const;
-	uint32_t getTimeLastCaptureComplete() const;
+	uint32_t getTimeLastCaptureStart() const;
 	uint16_t getRemainingFrames() const;
 
 };

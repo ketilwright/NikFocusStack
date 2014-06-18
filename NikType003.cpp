@@ -213,7 +213,6 @@ uint16_t NikType003::captureToCard()
     uint16_t ret = PTP_RC_GeneralError;
     if(!m_stateFlags.m_captureInProgress)
     {
-		g_pRunStack->reportDelay(0);
 		g_pRunStack->reportStatus(F("Capture"));
         uint32_t params[2];
         params[0] = 0xffffffff; // Capture Sort = Normal, no AF.
@@ -255,7 +254,7 @@ uint16_t NikType003::startFocusStack()
     if(PTP_RC_OK == ret)
     {
         g_pRunStack->reportFrame(m_remainingFrames);
-		g_pRunStack->resetLastUpdateTime();
+		g_pRunStack->resetLastUpdateTime(m_timeLastCapture);
 		m_remainingFrames--;
     }
     else
@@ -410,5 +409,5 @@ bool NikType003::isCaptureInProgress() const { return m_stateFlags.m_captureInPr
 bool NikType003::isFocusStackActive() const { return m_stateFlags.m_stackActive; }
 bool NikType003::isNextFrameFocused() const { return m_stateFlags.m_preparedNextFrame; }
 uint16_t NikType003::getProductID() const { return m_idProduct; }
-uint32_t NikType003::getTimeLastCaptureComplete() const { return m_timeLastCapture; }
+uint32_t NikType003::getTimeLastCaptureStart() const { return m_timeLastCapture; }
 uint16_t NikType003::getRemainingFrames() const { return m_remainingFrames; }

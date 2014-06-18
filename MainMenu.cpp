@@ -60,20 +60,37 @@ MsgResp MainMenuHandler::processMessage(Msg& msg)
 			{ 
 				switch(getCaretCol())
 				{
-					case SetupMenuPos: moveCaret(RunMenuPos, 1); break;
-					case RunMenuPos:   moveCaret(SetupMenuPos, 1); break;
-					default: break;
+					case SetupMenuPos:
+					{
+						if(nk3.isConnected()) moveCaret(RunMenuPos, 0);
+						break;
+					}
+					case RunMenuPos:
+					{
+						moveCaret(SetupMenuPos, 0);
+						break;
+					}
+					default:break;
 				}
 				break;
 			}
             case eRight:
 			{
-				if(nk3.isConnected()) 
+				switch(getCaretCol())
 				{
-					moveCaret(RunMenuPos, 1);
+					case SetupMenuPos: 
+					{
+						if(nk3.isConnected()) moveCaret(RunMenuPos, 0);
+						break;
+					}
+					case RunMenuPos:
+					{
+						moveCaret(SetupMenuPos, 0);
+						break;
+					}
+					default:break;
 				}
 				break;
-
 			}
             case eSelect:
             {
@@ -119,31 +136,8 @@ void MainMenuHandler::show()
 {
 	if(!g_usbOK) return;
     IMessageHandler::show();
-    //g_print->setCursor(0, 0);
-    //switch(nk3.getProductID())
-    //{
-        //case 0x0428:
-        //{
-             //g_print->print(F("D7k "));
-             //break;
-        //}
-        //case 0x0429:
-        //{
-             //g_print->print(F("D5100 "));
-             //break;
-        //}
-        //case 0x0421:
-        //{
-            //g_print->print(F("D90 "));
-            //break;
-        //}
-        //default:
-        //{
-            //g_print->print(F("Nikon "));
-            //break;
-        //}
-    //}
-    //g_print->print(nk3.isConnected() ? F("connected") : F("disconnected"));
+	moveCaret(0, 0);
+	showCaret(true);
 }
 
 

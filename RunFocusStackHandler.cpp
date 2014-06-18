@@ -19,10 +19,12 @@
  */
 
 #include "RunFocusStackHandler.h"
+#include "SetupHandler.h"
 #include "NikType003.h"
 #include "LcdImpl.h"
 #include <WString.h>
 extern IMessageHandler *g_pMain;
+extern SetupHandler *g_pSetup;
 extern NikType003  nk3;
 
 #define FrameNumberPos 4
@@ -34,7 +36,6 @@ RunFocusStackHandler::RunFocusStackHandler(MessagePump *_pump)
     IMessageHandler(_pump)
 {
     menu[0] = "Frm";
-	menu[1] = NULL;
 }
 
 RunFocusStackHandler::~RunFocusStackHandler()
@@ -57,6 +58,7 @@ void RunFocusStackHandler::show()
 	g_print->clear();
 	g_print->setCursor(0, 0);
 	g_print->print(menu[0]);
+	showCaret(false);
 	nk3.startFocusStack();
 }
 void RunFocusStackHandler::reportStatus(const __FlashStringHelper* msg)
@@ -65,6 +67,8 @@ void RunFocusStackHandler::reportStatus(const __FlashStringHelper* msg)
 	g_print->print(F("       "));
 	g_print->setCursor(StatusPos, 0);
 	g_print->print(msg);
+	g_print->setCursor(0, 1);
+	g_print->print(F("                "));
 }
 void RunFocusStackHandler::reportFrame(uint16_t frame)
 {
@@ -73,22 +77,27 @@ void RunFocusStackHandler::reportFrame(uint16_t frame)
 	g_print->setCursor(FrameNumberPos, 0);
 	g_print->print(frame);
 }
-void RunFocusStackHandler::reportDelay(uint8_t seconds)
+void RunFocusStackHandler::reportDelay(uint32_t curMilliseconds)
 {
-	resetLastUpdateTime();
-	g_print->setCursor(0, 1);
-	if(seconds > 0)
+	if((curMilliseconds - getLastUpdateTime()) > 1000)
 	{
-		g_print->print(F("Delay"));
-		g_print->setCursor(DelayPos, 1);
-		g_print->print(F("    "));
-		g_print->setCursor(DelayPos, 1);
-		g_print->print(seconds);	
-	}
-	else
-	{
-		g_print->print(F("        "));
+		uint32_t seconds = ((double)curMilliseconds - (double)nk3.getTimeLastCaptureStart()) / 1000;
+		resetLastUpdateTime(curMilliseconds);
+		g_print->setCursor(0, 1);
+		if(seconds > 0)
+		{
+			g_print->print(F("Delay"));
+			g_print->setCursor(DelayPos, 1);
+			g_print->print(F("    "));
+			g_print->setCursor(DelayPos, 1);
+			g_print->print((int)g_pSetup->getFrameDelayMilliseconds() / 1000 - seconds);	
+		}
+		else
+		{
+			g_print->setCursor(DelayPos, 1);
+			g_print->print(F("        "));
+		}
 	}
 }
 unsigned long RunFocusStackHandler::getLastUpdateTime() const { return m_lastUpdateTime;}
-void RunFocusStackHandler::resetLastUpdateTime() { m_lastUpdateTime = millis(); }
+void RunFocusStackHandler::resetLastUpdateTime(uint32_t curMilliseconds) { m_lastUpdateTime = curMilliseconds; }

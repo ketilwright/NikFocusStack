@@ -38,8 +38,8 @@ public:
 	// UI update methods
 	void reportStatus(const __FlashStringHelper* msg);
 	void reportFrame(uint16_t frame);
-	void reportDelay(uint8_t seconds);
+	void reportDelay(uint32_t curMilliseconds);
 	unsigned long getLastUpdateTime() const;
-	void resetLastUpdateTime();
+	void resetLastUpdateTime(uint32_t curMilliseconds);
 };
 

@@ -3,20 +3,14 @@ RunFocusStackHandler.d RunFocusStackHandler.o: \
  .././MessageHandler.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdint.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\stdint.h \
- .././NikType003.h \
- C:\projects\embedded\arduino\NikFocusStack\libs\PTP_2.0/nkeventparser.h \
- C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/Usb.h \
- c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\inttypes.h \
- c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stddef.h \
- c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\stdio.h \
- c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdarg.h \
- C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/settings.h \
- C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/macros.h \
+ .././SetupHandler.h .././Sketch.h \
  C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/Arduino.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\stdlib.h \
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stddef.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\string.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\math.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\inttypes.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\iom328p.h \
@@ -33,9 +27,16 @@ RunFocusStackHandler.d RunFocusStackHandler.o: \
  C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/HardwareSerial.h \
  C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/Stream.h \
  C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/Print.h \
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\stdio.h \
+ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdarg.h \
  C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/Printable.h \
  C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/new.h \
  C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/pins_arduino.h \
+ .././NikType003.h \
+ C:\projects\embedded\arduino\NikFocusStack\libs\PTP_2.0/nkeventparser.h \
+ C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/Usb.h \
+ C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/settings.h \
+ C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/macros.h \
  C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/printhex.h \
  C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/message.h \
  C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/hexdump.h \
@@ -72,33 +73,23 @@ c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-g
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\stdint.h:
 
-.././NikType003.h:
+.././SetupHandler.h:
 
-C:\projects\embedded\arduino\NikFocusStack\libs\PTP_2.0/nkeventparser.h:
-
-C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/Usb.h:
-
-c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\inttypes.h:
-
-c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stddef.h:
-
-c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\stdio.h:
-
-c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdarg.h:
-
-C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/settings.h:
-
-C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/macros.h:
+.././Sketch.h:
 
 C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/Arduino.h:
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\stdlib.h:
+
+c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stddef.h:
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\string.h:
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\math.h:
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\pgmspace.h:
+
+c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\inttypes.h:
 
 c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -132,11 +123,25 @@ C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/Stream.h:
 
 C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/Print.h:
 
+c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\avr\include\stdio.h:
+
+c:\program\ files\ (x86)\atmel\atmel\ toolchain\avr8\ gcc\native\3.4.1056\avr8-gnu-toolchain\lib\gcc\avr\4.8.1\include\stdarg.h:
+
 C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/Printable.h:
 
 C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/new.h:
 
 C:\Users\Ketil\Documents\Arduino\ Template\ Express\Boards\Uno\Headers/pins_arduino.h:
+
+.././NikType003.h:
+
+C:\projects\embedded\arduino\NikFocusStack\libs\PTP_2.0/nkeventparser.h:
+
+C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/Usb.h:
+
+C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/settings.h:
+
+C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/macros.h:
 
 C:\projects\embedded\arduino\NikFocusStack\libs\USB_Host_Shield_2.0/printhex.h:
 

@@ -27,7 +27,7 @@ IMessageHandler::IMessageHandler(MessagePump* _pump)
     :
     m_pump(_pump),
     m_caretCol(0),
-	m_caretRow(1)
+	m_caretRow(0)
 {
     //for(unsigned int line = 0; line < sizeof(menu) / sizeof(menu[0]); line++) menu[line] = NULL;
 	memset(menu, 0, sizeof(menu)); // 33076
@@ -65,23 +65,16 @@ void IMessageHandler::show()
 		g_print->print(menu[2]);
 	}
 	m_caretCol = 0;
-    showCaret(true);
+    
 }
 
 // Draws or hides the caret.
+
 void IMessageHandler::showCaret(bool show)
 {
-    g_print->setCursor(m_caretCol, m_caretRow);
-    if(show)
-    {
-       // g_print->print(F(">"));
-	   g_print->cursor();
-    }
-    else
-    {
-		g_print->noCursor();
-        //g_print->print(F(" "));
-    }
+	g_print->setCursor(m_caretCol, m_caretRow);
+	if(show) g_print->cursor();
+	else g_print->noCursor();
 }
 
 // Redraws the caret at the specified location

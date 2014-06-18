@@ -161,15 +161,14 @@ void loop()
 				nk3.prepareNextFrame();
 			}
 			// else we're focused & waiting on the frame delay
-			else if(now - nk3.getTimeLastCaptureComplete() >= g_pSetup->getFrameDelayMilliseconds())
+			else if(now - nk3.getTimeLastCaptureStart() >= g_pSetup->getFrameDelayMilliseconds())
 			{
 				nk3.focusStackNextFrame();
 			}
 			// else update the frame delay countdown once a second.
-			if((0 != g_pSetup->getFrameDelayMilliseconds()) && (now - g_pRunStack->getLastUpdateTime() > 1000 ))
+			if(0 != g_pSetup->getFrameDelayMilliseconds())
 			{
-				// Flash recharging: put up a countdown timer once a second.
-				g_pRunStack->reportDelay((g_pSetup->getFrameDelayMilliseconds() - now + nk3.getTimeLastCaptureComplete())  / 1000 + 1);
+				g_pRunStack->reportDelay(now);
 			}
 		}
 	}
