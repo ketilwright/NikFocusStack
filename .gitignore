@@ -1,6 +1,11 @@
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
+# output directores
+/Debug
+/Release
+# atmel studio junk
+*.atsuo
 
 # Folder config file
 Desktop.ini
